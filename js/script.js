@@ -84,7 +84,7 @@ const modalClose = document.querySelector(".close-modal-btn");
 detailBtn.forEach((item) => {
   item.addEventListener("click", (e) => {
     e.preventDefault();
-    document.body.classList.add("noscroll");
+    document.body.classList.add("no-scroll");
     modal.classList.add("active");
   });
 });
@@ -92,13 +92,13 @@ detailBtn.forEach((item) => {
 modalClose.addEventListener("click", (e) => {
   e.preventDefault();
   modal.classList.remove("active");
-  document.body.classList.remove("noscroll");
+  document.body.classList.remove("no-scroll");
 });
 
 modal.addEventListener("click", (e) => {
   if (!modalDetail.contains(e.target)) {
     modal.classList.remove("active");
-    document.body.classList.remove("noscroll");
+    document.body.classList.remove("no-scroll");
   }
 });
 
@@ -109,6 +109,6 @@ document.addEventListener("click", (e) => {
     !detailBtn.contains(e.target)
   ) {
     modal.classList.remove("active");
-    document.body.classList.remove("noscroll");
+    document.body.classList.remove("no-scroll");
   }
 });
