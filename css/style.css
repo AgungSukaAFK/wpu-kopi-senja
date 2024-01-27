@@ -22,6 +22,10 @@ body {
   color: white;
 }
 
+body.no-scroll {
+  overflow: hidden;
+}
+
 /* Navbar */
 .navbar {
   display: flex;
@@ -89,6 +93,111 @@ body {
   cursor: pointer;
 }
 
+.navbar .search-form {
+  position: absolute;
+  top: 100%;
+  right: 7%;
+  background-color: white;
+  width: 50rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: 0.3s;
+}
+
+.navbar .search-form.active {
+  transform: scaleY(1);
+}
+
+.navbar .search-form input {
+  height: 100%;
+  width: 100%;
+  font-size: 1.6rem;
+  color: var(--bg);
+  padding: 1rem;
+}
+
+.navbar .search-form .search-cancel-button {
+  content: "x";
+  background-color: rgba(255, 255, 255, 0);
+  font-size: 1.6rem;
+  margin-right: 1.2rem;
+  cursor: pointer;
+  display: none;
+}
+
+::-webkit-search-cancel-button {
+  display: none;
+}
+
+.navbar .search-form .search-cancel-button.active {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .search-form label {
+  color: var(--bg);
+  cursor: pointer;
+  margin-right: 1.5rem;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Shopping-cart */
+.shopping-cart {
+  position: absolute;
+  top: 100%;
+  right: -100%;
+  width: 35rem;
+  height: 100vh;
+  padding: 0 1.5rem;
+  color: var(--bg);
+  background-color: white;
+  transition: 0.5s ease-in-out;
+}
+
+.shopping-cart.active {
+  right: 0;
+}
+
+.shopping-cart img {
+  height: 6rem;
+  border-radius: 50%;
+}
+
+.shopping-cart .cart-item {
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #666;
+  position: relative;
+}
+
+.shopping-cart .cart-item h3 {
+  font-size: 1.6rem;
+  padding-bottom: 0.5rem;
+}
+
+.shopping-cart .cart-item {
+  font-size: 1.2rem;
+}
+
+.shopping-cart .cart-item .remove-item {
+  position: absolute;
+  right: 1rem;
+  transition: 0.2s;
+}
+
+.shopping-cart .cart-item .remove-item:hover {
+  cursor: pointer;
+  color: var(--primary);
+}
+
 /* Hero Section */
 .hero {
   display: flex;
@@ -153,12 +262,14 @@ body {
 /* About */
 .about,
 .menu,
+.product,
 .contact {
   padding: 10rem 7% 1.4rem;
 }
 
 .about h2,
 .menu h2,
+.product h2,
 .contact h2 {
   text-align: center;
   font-size: 2.6rem;
@@ -167,6 +278,7 @@ body {
 
 .about h2 span,
 .menu h2 span,
+.product h2 span,
 .contact h2 span {
   color: var(--primary);
 }
@@ -208,6 +320,7 @@ contact h2 {
 }
 
 .menu p,
+.product p,
 .contact p {
   text-align: center;
   font-weight: 100;
@@ -236,6 +349,80 @@ contact h2 {
 
 .menu .row .menu-card .menu-card-title {
   margin: 1rem auto 0.5rem;
+}
+
+/* Product */
+.product .row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+
+.product .product-card {
+  text-align: center;
+  border: 1px solid #666;
+  padding: 2rem;
+}
+
+.product .product-icon {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.product .product-icon a {
+  width: 4rem;
+  height: 4rem;
+  color: white;
+  margin: 0.3rem;
+  border: 1px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+  padding: 1rem;
+}
+
+.product .product-icon a:hover {
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.product .product-image {
+  padding: 1rem 0;
+}
+
+.product .product-image img {
+  height: 25rem;
+}
+
+.product .product-content h3 {
+  font-size: 2rem;
+}
+
+.product .product-stars {
+  font-size: 1.7rem;
+  padding: 0.8rem;
+  color: var(--primary);
+}
+
+.product .product-price,
+.modal .product-price {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+.product .product-price span,
+.modal .product-price span {
+  text-decoration: line-through;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.product .product-stars .star-full,
+.modal .product-stars .star-full {
+  fill: var(--primary);
 }
 
 /* Contact */
@@ -325,6 +512,119 @@ contact h2 {
   color: darkslateblue;
 }
 
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  display: none;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  color: var(--bg);
+}
+
+.modal.active {
+  display: flex;
+  animation: anjay 0.3s ease normal;
+}
+
+@keyframes anjay {
+  from {
+    top: -100px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+.modal .detail {
+  position: relative;
+  background-color: white;
+  display: flex;
+  padding: 1.5rem;
+}
+
+.modal .detail-image img {
+  height: 25rem;
+}
+
+.modal .detail-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
+  gap: 0.5rem;
+  width: 30rem;
+}
+
+.modal .detail-content h3 {
+  font-size: 1.7rem;
+  letter-spacing: 0.1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.modal .detail-content p {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.7);
+  text-align: justify;
+  text-align-last: left;
+  flex-grow: 1;
+  overflow: auto;
+  max-height: 12rem;
+}
+
+.modal .product-stars {
+  font-size: 1.7rem;
+  color: var(--primary);
+}
+
+.modal .detail .close-modal-btn {
+  position: absolute;
+  background-color: white;
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 1rem;
+  top: 1rem;
+}
+
+.modal .detail .modal-cart-btn {
+  background-color: var(--primary);
+  width: fit-content;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  filter: brightness(1);
+  transition: 0.2s;
+  font-size: 1.2rem;
+}
+.modal .detail .modal-cart-btn:hover {
+  cursor: pointer;
+  filter: brightness(0.8);
+}
+
+.modal .detail .modal-cart-btn:active {
+  cursor: grab;
+  filter: brightness(0.4);
+}
+
 /* Media queries */
 
 /* Laptop */
@@ -408,6 +708,34 @@ contact h2 {
   .contact .row form {
     padding-top: 0;
   }
+
+  .navbar .search-form {
+    width: 90%;
+    right: 2rem;
+  }
+
+  .modal .detail {
+    flex-wrap: wrap;
+    width: 40rem;
+    justify-content: center;
+  }
+
+  .modal .detail-content {
+    width: 100%;
+    margin: 0 1rem;
+  }
+
+  .modal .detail-image img {
+    height: 35rem;
+  }
+
+  .modal .detail-content h3 {
+    font-size: 2rem;
+  }
+
+  .modal .detail-content p {
+    font-size: 1.4rem;
+  }
 }
 
 /* Mobile phone */
@@ -422,5 +750,9 @@ contact h2 {
 
   .menu .row .menu-card img {
     width: 60%;
+  }
+
+  .navbar .search-form .search-cancel-button {
+    font-size: 2rem;
   }
 }
