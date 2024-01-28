@@ -106,7 +106,7 @@ document.addEventListener("click", (e) => {
   if (
     !modal.contains(e.target) &&
     !modalClose.contains(e.target) &&
-    !detailBtn.contains(e.target)
+    !Array.from(detailBtn).some((btn) => btn.contains(e.target))
   ) {
     modal.classList.remove("active");
     document.body.classList.remove("no-scroll");
