@@ -22,7 +22,7 @@ body {
   color: white;
 }
 
-.no-scroll {
+body.no-scroll {
   overflow: hidden;
 }
 
@@ -208,9 +208,10 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0));
 }
 
-.hero::after {
+/* .hero::after {
   content: "";
   width: 100%;
   height: 30%;
@@ -221,11 +222,24 @@ body {
     rgba(1, 1, 3, 1) 8%,
     rgba(255, 255, 255, 0) 50%
   );
+} */
+
+.hero .mask-container {
+  mask-image: url("../img/coffe-bg.svg");
+  position: absolute;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: cover;
+  inset: 0;
 }
 
 .hero .content {
   padding: 1.4rem 7%;
-  max-width: 60rem;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  top: 150px;
+  /* max-width: 60rem; */
 }
 
 .hero .content h1 {
@@ -294,6 +308,10 @@ body {
 
 .about .row .about-img img {
   width: 100%;
+  mask-image: url("../img/splash.svg");
+  mask-size: 70%;
+  mask-repeat: no-repeat;
+  mask-position: center;
 }
 
 .about .row .content {
