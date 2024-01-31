@@ -18,8 +18,20 @@
 
     <!-- My Style -->
     <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Alpine Js -->
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+    <!-- App script -->
+    <script src="./src/app.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        feather.replace();
+      });
+    </script>
   </head>
-  <body>
+  <body x-data="{showModal: false}">
     <!-- Navbar start -->
     <nav class="navbar">
       <a href="#" class="navbar-logo">Kopi<span>Senja</span>.</a>
@@ -31,12 +43,21 @@
         <a href="#contact">Kontak</a>
       </div>
 
-      <div class="navbar-extra">
-        <a href="#" id="search-btn"><i data-feather="search"></i></a>
-        <a href="#" id="shopping-cart-btn"
-          ><i data-feather="shopping-cart"></i
-        ></a>
-        <div id="hamburger-menu"><i data-feather="menu"></i></div>
+      <div class="navbar-extra" x-data>
+        <a href="#" id="search-btn">
+          <i data-feather="search"></i>
+        </a>
+        <a href="#" id="shopping-cart-btn">
+          <i data-feather="shopping-cart"></i>
+          <span
+            class="quantity-badge"
+            x-text="$store.cart.quantity"
+            x-show="$store.cart.quantity"
+          ></span>
+        </a>
+        <div id="hamburger-menu">
+          <i data-feather="menu"></i>
+        </div>
       </div>
 
       <!-- Searching Form start -->
@@ -54,29 +75,70 @@
 
       <!-- Shopping-cart start -->
       <div class="shopping-cart">
-        <div class="cart-item">
-          <img src="./img/produk/1.webp" alt="item" />
-          <div class="item-detail">
-            <h3>Item name</h3>
-            <div class="item-price">IDR 30K</div>
+        <template x-for="(item, index) in $store.cart.items" :key="index">
+          <div class="cart-item">
+            <img :src="`./img/produk/${item.img}`" :alt="item.name" />
+            <div class="item-detail">
+              <h3 x-text="item.name"></h3>
+              <div class="item-price">
+                <span x-text="rupiah(item.price)"></span> &times;
+                <button id="qt-minus" @click="$store.cart.remove(item.id)">
+                  &minus;
+                </button>
+                <span x-text="item.quantity"></span>
+                <button id="qt-plus" @click="$store.cart.add(item)">
+                  &plus;
+                </button>
+                <span x-text="rupiah(item.total)"></span>
+              </div>
+            </div>
+            <!-- <i data-feather="trash" class="remove-item" x-ignore></i> -->
           </div>
-          <i data-feather="trash-2" class="remove-item"></i>
-        </div>
-        <div class="cart-item">
-          <img src="./img/produk/1.webp" alt="item" />
-          <div class="item-detail">
-            <h3>Item name</h3>
-            <div class="item-price">IDR 30K</div>
-          </div>
-          <i data-feather="trash-2" class="remove-item"></i>
-        </div>
-        <div class="cart-item">
-          <img src="./img/produk/1.webp" alt="item" />
-          <div class="item-detail">
-            <h3>Item name</h3>
-            <div class="item-price">IDR 30K</div>
-          </div>
-          <i data-feather="trash-2" class="remove-item"></i>
+        </template>
+        <h4 x-show="!$store.cart.items.length" class="kosong">
+          - Keranjang kosong nih 😖 -
+        </h4>
+        <h4 x-show="$store.cart.items.length" class="total-harga">
+          Total Harga: <span x-text="rupiah($store.cart.total)"></span>
+        </h4>
+        <div class="form-container" x-show="$store.cart.items.length">
+          <form action="">
+            <h5>Detail pembeli</h5>
+            <label for="name">
+              <span>Name</span>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Masukkan nama ..."
+              />
+            </label>
+
+            <label for="email">
+              <span>Email</span>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Masukkan email..."
+              />
+            </label>
+
+            <label for="phone">
+              <span>No HP</span>
+              <input
+                type="number"
+                id="phone"
+                name="phone"
+                placeholder="..."
+                autocomplete="off"
+              />
+            </label>
+
+            <button type="button" class="checkout-button" id="checkout-button">
+              Checkout
+            </button>
+          </form>
         </div>
       </div>
       <!-- Shopping-cart end -->
@@ -175,109 +237,50 @@
     <!-- Menu Section end -->
 
     <!-- Product Section start -->
-    <section class="product" id="product">
+    <section class="product" id="product" x-data="products">
       <h2><span>Produk Unggulan</span> Kami</h2>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore expedita
         harum qui, earum eum eligendi.
       </p>
       <div class="row">
-        <div class="product-card">
-          <div class="product-icon">
-            <a href="#" title="Tambah ke keranjang">
-              <i data-feather="shopping-cart"></i>
-            </a>
-            <a href="#" title="Detail produk" class="detail-btn">
-              <i data-feather="eye"></i>
-            </a>
-          </div>
-          <div class="product-image">
-            <img src="./img/produk/1.webp" alt="produk" />
-          </div>
-          <div class="product-content">
-            <h3>Coffe Beans 1</h3>
-            <div class="product-stars">
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star"></i>
+        <template x-for="(item, index) in items" x-key="index">
+          <div class="product-card">
+            <div class="product-icon">
+              <a
+                href="#"
+                title="Tambah ke keranjang"
+                @click.prevent="$store.cart.add(item)"
+              >
+                <i data-feather="shopping-cart"></i>
+              </a>
+              <a
+                href="#"
+                title="Detail produk"
+                class="detail-btn"
+                @click.prevent="showModal = true"
+              >
+                <i data-feather="eye"></i>
+              </a>
             </div>
-            <div class="product-price">IDR 30K <span>IDR 55K</span></div>
-          </div>
-        </div>
-        <div class="product-card">
-          <div class="product-icon">
-            <a href="#" title="Tambah ke keranjang">
-              <i data-feather="shopping-cart"></i>
-            </a>
-            <a href="#" title="Detail produk" class="detail-btn">
-              <i data-feather="eye"></i>
-            </a>
-          </div>
-          <div class="product-image">
-            <img src="./img/produk/1.webp" alt="produk" />
-          </div>
-          <div class="product-content">
-            <h3>Coffe Beans 1</h3>
-            <div class="product-stars">
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star"></i>
+            <div class="product-image">
+              <img :src="`./img/produk/${item.img}`" :alt="item.name" />
             </div>
-            <div class="product-price">IDR 30K <span>IDR 55K</span></div>
-          </div>
-        </div>
-        <div class="product-card">
-          <div class="product-icon">
-            <a href="#" title="Tambah ke keranjang">
-              <i data-feather="shopping-cart"></i>
-            </a>
-            <a href="#" title="Detail produk" class="detail-btn">
-              <i data-feather="eye"></i>
-            </a>
-          </div>
-          <div class="product-image">
-            <img src="./img/produk/1.webp" alt="produk" />
-          </div>
-          <div class="product-content">
-            <h3>Coffe Beans 1</h3>
-            <div class="product-stars">
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star"></i>
+            <div class="product-content">
+              <h3 x-text="item.name"></h3>
+              <div class="product-stars">
+                <i data-feather="star" class="star-full"></i>
+                <i data-feather="star" class="star-full"></i>
+                <i data-feather="star" class="star-full"></i>
+                <i data-feather="star" class="star-full"></i>
+                <i data-feather="star"></i>
+              </div>
+              <div class="product-price">
+                <span x-text="rupiah(item.price)"></span>
+              </div>
             </div>
-            <div class="product-price">IDR 30K <span>IDR 55K</span></div>
           </div>
-        </div>
-        <div class="product-card">
-          <div class="product-icon">
-            <a href="#" title="Tambah ke keranjang">
-              <i data-feather="shopping-cart"></i>
-            </a>
-            <a href="#" title="Detail produk" class="detail-btn">
-              <i data-feather="eye"></i>
-            </a>
-          </div>
-          <div class="product-image">
-            <img src="./img/produk/1.webp" alt="produk" />
-          </div>
-          <div class="product-content">
-            <h3>Coffe Beans 1</h3>
-            <div class="product-stars">
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star" class="star-full"></i>
-              <i data-feather="star"></i>
-            </div>
-            <div class="product-price">IDR 30K <span>IDR 55K</span></div>
-          </div>
-        </div>
+        </template>
       </div>
     </section>
     <!-- Product Section end -->
@@ -348,9 +351,9 @@
     <!-- Footer Section end -->
 
     <!-- Modal Item Detail start -->
-    <div class="modal">
-      <div class="detail">
-        <a href="#" class="close-modal-btn">
+    <div class="modal" x-show="showModal">
+      <div class="detail" @click.away.prevent="showModal = false">
+        <a href="#" class="close-modal-btn" @click.prevent="showModal=false">
           <i data-feather="x"></i>
         </a>
         <div class="detail-image">

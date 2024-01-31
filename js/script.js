@@ -81,9 +81,10 @@ const modal = document.querySelector(".modal");
 const modalDetail = document.querySelector(".modal .detail");
 const modalClose = document.querySelector(".close-modal-btn");
 
-detailBtn.forEach((item) => {
-  item.addEventListener("click", (e) => {
+detailBtn.forEach((elem) => {
+  elem.addEventListener("click", (e) => {
     e.preventDefault();
+    console.log("test");
     document.body.classList.add("no-scroll");
     modal.classList.add("active");
   });
@@ -112,3 +113,12 @@ document.addEventListener("click", (e) => {
     document.body.classList.remove("no-scroll");
   }
 });
+
+// Konversi angka ke rupiah
+const rupiah = (number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  }).format(number);
+};
